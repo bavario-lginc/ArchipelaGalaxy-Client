@@ -1,0 +1,15 @@
+.vs/
+.vscode/
+backup/
+assets/
+bin/
+dbg/
+obj/
+Output/
+
+*.o
+*.map
+*.usr
+*.ninja_deps
+*.ninja_log
+build.ninja

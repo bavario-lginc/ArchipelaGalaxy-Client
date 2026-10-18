@@ -1,0 +1,123 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ArchipelaGalaxy.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="ArchipelaGalaxy.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Width="550"
+        Height="425"
+        Icon="/Assets/Icon.ico"
+        Title="ArchipelaGalaxy: Main Window"
+        CanResize="False">
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Panel>
+        <StackPanel Margin="20 0 20 0">
+            <TextBlock 
+                Text="1. Connect to the Game"
+                Foreground="#adadad"
+                FontSize="20.0"
+                Margin="0 20 5 20"/>
+            <StackPanel
+                Orientation="Horizontal"
+                Spacing="50"
+                HorizontalAlignment="Center">
+                <Button
+                Margin="0 0 0 0"
+                Width="150"
+                Height="75"
+                Click="OpenDolphin"
+                x:Name="DolphinNoConnectBtn">
+                <Image
+                    Height="50"
+                    HorizontalAlignment="Left"
+                    Source="/Assets/Dolphin_gray.png"
+                    IsVisible="True" />
+                </Button>
+                <Button
+                Margin="0 0 0 0"
+                Width="150"
+                Height="75"
+                x:Name="DolphinConnectBtn"
+                IsVisible="False">
+                <Image
+                    Height="50"
+                    HorizontalAlignment="Left"
+                    Source="/Assets/Dolphin.png" />
+                </Button>
+                <Button
+                Classes="NoDisabledLook"
+                Margin="0 0 0 0"
+                Width="150"
+                Height="75"
+                x:Name="RiivoNoConnectBtn"
+                IsHitTestVisible="False"
+                Focusable="False">
+                <Image
+                    Height="50"
+                    HorizontalAlignment="Left"
+                    Source="/Assets/Riivolution_gray.png" />
+                </Button>
+                <Button
+                Margin="0 0 0 0"
+                Width="150"
+                Height="75"
+                x:Name="RiivoConnectBtn"
+                IsVisible="False">
+                <Image
+                    Height="50"
+                    HorizontalAlignment="Left"
+                    Source="/Assets/Riivolution.png" />
+                </Button>
+            </StackPanel>
+            <StackPanel
+                Margin="0 10 0 0"
+                Orientation="Horizontal"
+                Spacing="50"
+                HorizontalAlignment="Center">
+                <TextBlock
+                    Width="150"
+                    TextAlignment="Center"
+                    FontStyle="Italic"
+                    FontSize="15"
+                    Foreground="Red"
+                    x:Name="DolphinConnectText"
+                    Text="Click to open..." />
+                <TextBlock
+                    Width="150"
+                    TextAlignment="Center"
+                    FontStyle="Italic"
+                    FontSize="15"
+                    Foreground="Red"
+                    x:Name="RiivolutionConnectText"
+                    Text="Not connected" />
+            </StackPanel>
+            <TextBlock 
+                Text="2. Enter Port and Slot Name"
+                Foreground="#adadad"
+                FontSize="20.0"
+                Margin="5 30 0 10"/>
+            <TextBox 
+                PlaceholderText="archipelago.gg:12345"
+                Text="archipelago.gg:"
+                FontSize="15"
+                Margin="0 0 0 10"
+                />
+            <TextBox 
+                PlaceholderText="&lt;Slot Name&gt;"
+                FontSize="15"
+                />
+                <Button
+                    Margin="0 30 0 0"
+                    Padding="25 10 25 10"
+                    FontSize="20"
+                    HorizontalAlignment="Center">
+                    Connect
+                </Button>
+        </StackPanel>
+    </Panel>
+</Window>

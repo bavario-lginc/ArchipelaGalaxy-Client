@@ -1,0 +1,36 @@
+CustomCode: Can be fully redistributed
+LayoutData: 
+    - Add MyLock.tpl into MapGalaxyState/timg ✓
+LocalizeData: Patch MSBTs/MSBFs ✓
+ObjectData:
+    - EarthenPipe: BRK ✓
+    - Ice*: No idea bruh
+    - LiftFlower: Remove ActorInfo/InitSensor.bcsv ✓
+    - SpinDriverEmpty: Add archive 
+    - SuperSpinDriverEmpty: Add archive 
+    - SystemDataTable:
+        - HeapSizeExcept.bcsv:
+            - Set both IslandFleetGalaxy values to -1 ✓
+    - WorldMap01.arc:
+        - ActorInfo/PointLink.bcsv:
+            - Delete (PointIndexA->PointIndexB) 14->16; 16->15 ✓
+    - WorldMap02.arc:
+        - ActorInfo/PointLink.bcsv:
+            - Delete 0->17; 14->18; 18->15 ✓
+    - WorldMap03.arc:
+        - ActorInfo/PointLink.bcsv:
+            - Delete 0->18; 15->19; 19->16 ✓
+    - WorldMap04.arc:
+        - ActorInfo/PointLink.bcsv:
+            - Delete 0->17; 14->18; 13->18 ✓
+    - WorldMap05.arc:
+        - ActorInfo/PointLink.bcsv:
+            - Delete 0->14; 12->15; 15->13 ✓
+    - WorldMap06.arc:
+        - ActorInfo/PointLink.bcsv:
+            - Delete 0->19; 6->22; 22->23; 23->15 ✓
+    - WorldMap07.arc:
+        - ActorInfo/PointLink.bcsv:
+            - Delete 0->14 ✓
+    - YCaptureTransparent.arc: Add archive
+SaveGame: Keep empty

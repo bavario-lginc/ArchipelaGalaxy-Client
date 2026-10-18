@@ -1,0 +1,10 @@
+﻿global using s8 = sbyte;
+global using u8 = byte;
+global using s16 = short;
+global using u16 = ushort;
+global using s32 = int;
+global using u32 = uint;
+global using s64 = long;
+global using u64 = ulong;
+global using f32 = float;
+global using f64 = double;

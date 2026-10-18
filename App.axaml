@@ -1,0 +1,13 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ArchipelaGalaxy.App"
+             RequestedThemeVariant="Dark">
+    <Application.Resources>
+		<FontFamily x:Key="ContentControlThemeFontFamily">fonts:nf#JetBrainsMono, $Default</FontFamily>
+        <x:Double x:Key="ControlContentThemeFontSize">13</x:Double>
+    </Application.Resources>
+
+    <Application.Styles>
+        <SimpleTheme />
+    </Application.Styles>
+</Application>

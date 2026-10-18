@@ -1,0 +1,20 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ArchipelaGalaxy.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="ArchipelaGalaxy.Views.ErrorWindow"
+        Icon="/Assets/Icon.ico"
+        SizeToContent="WidthAndHeight"
+        MaxWidth="700"
+        MaxHeight="500"
+        CanResize="False">
+    <Panel>
+        <TextBox
+            x:Name="message"
+            TextWrapping="Wrap"
+            IsReadOnly="True"
+            Background="#630700" />
+    </Panel>
+</Window>

@@ -1,0 +1,136 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ArchipelaGalaxy.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="ArchipelaGalaxy.Views.IsoWindow"
+        x:DataType="vm:IsoWindowViewModel"
+        Width="550"
+        Height="425"
+        Icon="/Assets/Icon.ico"
+        Title="ArchipelaGalaxy: Generate Mod"
+        CanResize="False">
+    <Design.DataContext>
+        <vm:IsoWindowViewModel/>
+    </Design.DataContext>
+
+    <Panel>
+        <StackPanel Margin="20">
+            <TextBlock
+                Text="Please provide a valid Super Mario Galaxy 2 Game:"
+                Foreground="Gray"
+                FontSize="20.0"
+                Margin="0 5 0 10"
+                x:Name="Step1">
+                <Image 
+                    Source="/Assets/Check.png"
+                    Height="15"
+                    Margin="5 0 0 0"
+                    IsVisible="False"
+                    x:Name="Step1Check" />
+            </TextBlock>
+            <Button
+                Height="75"
+                Width="125"
+                HorizontalAlignment="Left"
+                Margin="20 0 0 0"
+                Click="SelectSMG2Iso"
+                x:Name="Step1LogoGray">
+                <Image 
+                    Source="/Assets/SMG2_gray.png"
+                    Height="50" />
+            </Button>
+            <StackPanel
+                Orientation="Horizontal"
+                Spacing="16">
+                <Button
+                Height="75"
+                Width="125"
+                HorizontalAlignment="Left"
+                Margin="20 0 0 0"
+                Click="SelectSMG2Iso"
+                IsVisible="False"
+                x:Name="Step1Logo">
+                    <Image 
+                        Source="/Assets/SMG2.png"
+                        Height="50" />
+                </Button>
+                <TextBlock
+                    Text="Region: PAL"
+                    VerticalAlignment="Center"
+                    FontSize="15"
+                    IsVisible="False"
+                    x:Name="Step1Region" />
+            </StackPanel>
+            <TextBlock
+                Text="(Optional: Provide a valid Super Mario Galaxy Game:)"
+                Foreground="Gray"
+                FontSize="20.0"
+                Margin="0 20 0 0"
+                x:Name="Step2">
+                <Image 
+                    Source="/Assets/Check.png"
+                    Height="15"
+                    Margin="5 0 0 0"
+                    IsVisible="False"
+                    x:Name="Step2Check" />
+            </TextBlock>
+            <TextBlock
+                Text="(This is only required for the Ice Flower.)"
+                Foreground="Gray"
+                FontStyle="Italic"
+                FontSize="10.0"
+                Margin="0 5 0 10"
+                x:Name="Step2Explanation" />
+            <Button
+                Height="75"
+                Width="125"
+                HorizontalAlignment="Left"
+                Margin="20 0 0 0"
+                Click="SelectSMG1Iso"
+                x:Name="Step2LogoGray">
+                <Image 
+                    Source="/Assets/SMG1_gray.png"
+                    Height="50" />
+            </Button>
+            <StackPanel
+                Orientation="Horizontal"
+                Spacing="16">
+                <Button
+                Height="75"
+                Width="125"
+                HorizontalAlignment="Left"
+                Margin="20 0 0 0"
+                Click="SelectSMG1Iso"
+                IsVisible="False"
+                x:Name="Step2Logo">
+                    <Image 
+                        Source="/Assets/SMG1.png"
+                        Height="50" />
+                </Button>
+                <TextBlock
+                    Text="Region: PAL"
+                    VerticalAlignment="Center"
+                    FontSize="15"
+                    IsVisible="False"
+                    x:Name="Step2Region" />
+            </StackPanel>
+            <Button
+                Margin="0 40 0 10"
+                Padding="12.5 5 12.5 5"
+                FontSize="20.0"
+                HorizontalAlignment="Left"
+                IsEnabled="False"
+                x:Name="GenerateBtn"
+                Click="GenerateMod">
+                Generate Mod
+            </Button>
+            <TextBlock
+                Text="You only need to do this once."
+                FontStyle="Italic"
+                FontSize="15">
+            </TextBlock>
+        </StackPanel>
+    </Panel>
+</Window>
