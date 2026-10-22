@@ -19,8 +19,8 @@ class BcsvPatch
         public float? value_float;
     }
     public ActionType action;
-    public List<Entry> query = new();
-    public List<Entry> values = new();
+    public List<Entry> query = [];
+    public List<Entry> values = [];
     
     public void Apply (BCSV bcsv)
     {

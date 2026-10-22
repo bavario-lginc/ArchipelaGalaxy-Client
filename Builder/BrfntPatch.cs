@@ -13,11 +13,11 @@ class BrfntPatch
     {
         AddTexture
     }
-    public ActionType action;
+    public required ActionType action;
     public string? external_path;
-    public int cwdh_index;
+    public required int cwdh_index;
     public Dictionary<u16, BRFNT.CWDHEntry> cwdh_entries = new();
-    public int cmap_index;
+    public required int cmap_index;
     public Dictionary<u16, s16> cmap_entries = new();
 
     public bool Apply (BRFNT brfnt, string pathToExternal)

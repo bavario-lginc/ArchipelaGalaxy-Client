@@ -21,9 +21,9 @@ class MsbfPatch
         public NodeInfo? next_node;
         public NodeInfo? next_node_else;
     }
-    public string start_label;
-    public string[] path;
-    public NodeInfo nodes;
+    public required string start_label;
+    public required string[] path;
+    public required NodeInfo nodes;
 
     private MSBF.NodeBase? CreateMSBFNode (MSBF msbf, MSBF.NodeBase danglingNode, NodeInfo? nodeInfo)
     {

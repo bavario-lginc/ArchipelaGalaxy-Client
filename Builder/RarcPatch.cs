@@ -8,8 +8,8 @@ class RarcPatch
         AddFile,
         RemoveFile
     }
-    public ActionType action;
-    public string path_in_arc = "";
+    public required ActionType action;
+    public required string path_in_arc;
     public string? external_path;
 
     public bool Apply (RARC arc, string pathToExternal)

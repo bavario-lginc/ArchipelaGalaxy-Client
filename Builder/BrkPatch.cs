@@ -7,12 +7,12 @@ class BrkPatch
     {
         AddFrame
     }
-    public ActionType action;
-    public ushort frame;
-    public string material_name = "";
-    public BRK.AnimationType type;
-    public byte register_id;
-    public float?[] rgba = new float?[4];
+    public required ActionType action;
+    public required string material_name;
+    public required ushort frame;
+    public required BRK.AnimationType type;
+    public required byte register_id;
+    public required float?[] rgba = new float?[4];
 
     public void Apply (BRK brk)
     {

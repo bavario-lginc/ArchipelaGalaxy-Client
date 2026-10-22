@@ -7,9 +7,8 @@ using ArchipelaGalaxy.Views;
 
 class PatchDownloader
 {
-    // 404's currently but once it's public it won't
-    public const string PatchDownloadURL = "https://github.com/bavario-lginc/SMG2-Archipelago/releases/download/test1/";
-    public const string PatchPath = "../../../Patch/";
+    public const string PatchDownloadURL = "https://github.com/bavario-lginc/SMG2-Archipelago/releases/latest/download";
+    public const string PatchPath = "Patch/";
     public static async Task<bool> GetPatch (string gameidWithRegion)
     {
         try

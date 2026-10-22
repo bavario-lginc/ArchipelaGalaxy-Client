@@ -9,7 +9,7 @@ using Avalonia.Utilities;
 
 class DolphinHelper
 {
-    public static readonly string OutputPath = "../../../Output";
+    public static readonly string OutputPath = "Output";
     public static readonly char[] ValidSMG2Regions = ['E', 'P', 'J', 'K', 'W'];
     public const string SMG2GameId = "SB4";
     public static readonly char[] ValidSMG1Regions = ['E', 'P', 'J', 'K'];
@@ -30,7 +30,7 @@ class DolphinHelper
         get => dolphinPath;
         set {
             dolphinPath = value;
-            Config.data.DolphinPath = value;
+            Config.data!.DolphinPath = value;
             Config.Save();
         }
     }
@@ -39,7 +39,7 @@ class DolphinHelper
         get => dolphinToolPath;
         set {
             dolphinToolPath = value;
-            Config.data.DolphinToolPath = value;
+            Config.data!.DolphinToolPath = value;
             Config.Save();
         }
     }
@@ -94,6 +94,10 @@ class DolphinHelper
 
     public static void Init ()
     {
+        if (!Directory.Exists(OutputPath))
+        {
+            Directory.CreateDirectory(OutputPath);
+        }
         foreach (string dir in Directory.GetDirectories(OutputPath))
         {
             string? gameid = Path.GetFileName(dir);
@@ -103,7 +107,7 @@ class DolphinHelper
             {
                 smg2path = Path.Combine(dir, "DATA", "files");
                 smg2GameIdWithRegion = gameid;
-                smg2IsoPath = Config.data.SMG2IsoPath;
+                smg2IsoPath = Config.data!.SMG2IsoPath;
                 continue;
             }
             if (smg1path is null && gameid.Contains(SMG1GameId) && gameid.ContainsAny(ValidSMG1Regions))
@@ -220,7 +224,7 @@ class DolphinHelper
         if (smg2path is not null)
         {
             smg2IsoPath = isoPath;
-            Config.data.SMG2IsoPath = isoPath;
+            Config.data!.SMG2IsoPath = isoPath;
             Config.Save();
         }
         return smg2path;
@@ -238,7 +242,7 @@ class DolphinHelper
     {
         if (DolphinPath is not null && DolphinToolPath is not null)
             return (DolphinPath, DolphinToolPath);
-        if (Config.data.DolphinPath is not null && Config.data.DolphinToolPath is not null)
+        if (Config.data!.DolphinPath is not null && Config.data.DolphinToolPath is not null)
         {
             dolphinPath = Config.data.DolphinPath;
             dolphinToolPath = Config.data.DolphinToolPath;
@@ -272,7 +276,7 @@ class DolphinHelper
         {
             CommonDolphinPaths = CommonDolphinPaths_Windows;
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             CommonDolphinPaths = CommonDolphinPaths_Linux;
         }

@@ -1,10 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 class Config
 {
-    public const string ConfigPath = "../../../Config.json";
+    public const string ConfigPath = "Config.json";
     public class ConfigData
     {
         [JsonPropertyName("SMG2IsoPath")]
@@ -14,10 +15,14 @@ class Config
         [JsonPropertyName("DolphinToolPath")]
         public string? DolphinToolPath;
     }
-    public static ConfigData data;
+    public static ConfigData? data;
 
     public static void Init ()
     {
+        if (!File.Exists(ConfigPath))
+        {
+            File.WriteAllText(ConfigPath, "{}");
+        }
         string jsonString = File.ReadAllText(ConfigPath);
         var options = new JsonSerializerOptions
         {

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 class Builder
 {
-    public const string PatchPath = "../../../Patch/";
-    public const string ModOutputFolder = "../../../Output/Mod";
+    public const string PatchPath = "Patch/";
+    public const string ModOutputFolder = "Output/Mod";
     public const string ModRootFolderName = "SMG2AP";
     public const string RiivolutionFolderName = "riivolution";
     public static readonly string[] SMG1CopyFiles = ["ObjectData/IceLuigi.arc", "ObjectData/IceMario.arc", "ObjectData/IceMarioHandL.arc", "ObjectData/IceMarioHandR.arc", "ObjectData/IceStep.arc", "ObjectData/IceStepNoSlip.arc"];

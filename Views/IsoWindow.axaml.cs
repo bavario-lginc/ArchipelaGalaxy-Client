@@ -28,7 +28,7 @@ namespace ArchipelaGalaxy.Views {
             {
                 ValidateSMG2(DolphinHelper.GetSMG2RegionPretty() ?? "");
             }
-            InitDolphinPath();
+            _ = InitDolphinPath();
         }
 
         public async Task InitDolphinPath ()
@@ -126,7 +126,7 @@ namespace ArchipelaGalaxy.Views {
                     await errorWindow.ShowDialog(this);
                     return;
                 }
-                await PatchDownloader.GetPatch(DolphinHelper.smg2GameIdWithRegion);
+                await PatchDownloader.GetPatch(DolphinHelper.smg2GameIdWithRegion!);
                 ValidateSMG2(DolphinHelper.GetSMG2RegionPretty() ?? "");
             }
         }
