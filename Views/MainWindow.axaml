@@ -96,28 +96,42 @@
                     x:Name="RiivolutionConnectText"
                     Text="Not connected" />
             </StackPanel>
-            <TextBlock 
-                Text="2. Enter Port and Slot Name"
-                Foreground="#adadad"
-                FontSize="20.0"
-                Margin="5 30 0 10"/>
-            <TextBox 
-                PlaceholderText="archipelago.gg:12345"
-                Text="archipelago.gg:"
-                FontSize="15"
-                Margin="0 0 0 10"
-                />
-            <TextBox 
-                PlaceholderText="&lt;Slot Name&gt;"
-                FontSize="15"
-                />
-                <Button
-                    Margin="0 30 0 0"
-                    Padding="25 10 25 10"
-                    FontSize="20"
-                    HorizontalAlignment="Center">
-                    Connect
-                </Button>
+                <TextBlock 
+                    Text="2. Enter Port and Slot Name"
+                    Foreground="#adadad"
+                    FontSize="20.0"
+                    Margin="5 30 0 10"/>
+                <TextBox 
+                    PlaceholderText="archipelago.gg:12345"
+                    Text="archipelago.gg:"
+                    FontSize="15"
+                    Margin="0 0 0 10"
+                    />
+                <TextBox 
+                    PlaceholderText="&lt;Slot Name&gt;"
+                    FontSize="15"
+                    />
+                <StackPanel
+                    Orientation="Horizontal"
+                    Spacing="170">
+                    <Button
+                        Margin="0 30 0 0"
+                        Padding="25 10 25 10"
+                        FontSize="20"
+                        HorizontalAlignment="Left">
+                        Connect
+                    </Button>
+                    <Button
+                        Margin="0 30 0 0"
+                        Padding="25 10 25 10"
+                        FontSize="20"
+                        HorizontalAlignment="Left"
+                        FontStyle="Italic"
+                        Click="OpenIsoWindow">
+                        Regenerate Mod
+                    </Button>
+                </StackPanel>
+                
         </StackPanel>
     </Panel>
 </Window>

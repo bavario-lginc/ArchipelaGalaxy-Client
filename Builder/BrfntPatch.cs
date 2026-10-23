@@ -78,7 +78,6 @@ class BrfntPatch
                         cmap.Entries.Add(i, -1);
                     }
                 }
-                brfnt.WriteToJson("test");
                 break;
             }
         }

@@ -159,19 +159,20 @@ class DolphinHelper
             Directory.Delete(outputPath, true);
         }
         List<string> command = [.. ExtractCommand, "-i", isoPath, "-o", outputPath];
-        Process dolphinTool;
         if (isFlatpak)
         {
-            dolphinTool = Process.Start("flatpak", ["run", "--command=dolphin-tool", "org.DolphinEmu.dolphin-emu", .. command]);
+            using Process dolphinTool = Process.Start("flatpak", ["run", "--command=dolphin-tool", "org.DolphinEmu.dolphin-emu", .. command]);
+            dolphinTool.WaitForExit();
+            return dolphinTool.ExitCode == 0;
         }
         else
         {
             if (DolphinToolPath is null)
                 return false;
-            dolphinTool = Process.Start(DolphinToolPath, command);
+            using Process dolphinTool = Process.Start(DolphinToolPath, command);
+            dolphinTool.WaitForExit();
+            return dolphinTool.ExitCode == 0;
         }
-        dolphinTool.WaitForExit();
-        return dolphinTool.ExitCode == 0;
     }
     private static (string?, string?) Load (string isoPath, string gameid, char[] validRegions)
     {
@@ -184,16 +185,19 @@ class DolphinHelper
             string bootBinPath = Path.Combine(outputPath, "DATA", "sys", "boot.bin");
             if (!File.Exists(bootBinPath))
                 return (null, null);
-            FileStream fs = new(bootBinPath, FileMode.Open);
-            foreach (char gameIdLetter in gameid)
+            char region = 'H';
+            using (FileStream fs = new(bootBinPath, FileMode.Open))
             {
-                if (fs.ReadByte() != gameIdLetter)
+                foreach (char gameIdLetter in gameid)
                 {
-                    Console.WriteLine($"Error: Unknown gameid. Cannot use ISO.");
-                    return (null, null);
+                    if (fs.ReadByte() != gameIdLetter)
+                    {
+                        Console.WriteLine($"Error: Unknown gameid. Cannot use ISO.");
+                        return (null, null);
+                    }
                 }
+                region = (char)fs.ReadByte();
             }
-            char region = (char)fs.ReadByte();
             foreach (char regionLetter in validRegions)
             {
                 if (region == regionLetter)

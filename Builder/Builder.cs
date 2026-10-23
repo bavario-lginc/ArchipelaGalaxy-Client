@@ -60,6 +60,11 @@ class Builder
         {
             Directory.Delete(toPath, true);
         }
+        string riivoDest = Path.Combine(ModOutputFolder, RiivolutionFolderName);
+        if (Directory.Exists(riivoDest))
+        {
+            Directory.Delete(riivoDest, true);
+        }
         Directory.CreateDirectory(toPath);
         try
         {
@@ -171,7 +176,6 @@ class Builder
                 }
             }
             Console.WriteLine("Copying Riivolution .xml...");
-            string riivoDest = Path.Combine(ModOutputFolder, RiivolutionFolderName);
             Directory.CreateDirectory(riivoDest);
             File.Copy(Path.Combine(PatchPath, gameidWithRegion, gameidWithRegion + ".xml"), Path.Combine(riivoDest, gameidWithRegion + ".xml"));
             Console.WriteLine("Done!");
