@@ -11,7 +11,6 @@ class Builder
     public const string ModOutputFolder = "Output/Mod";
     public const string ModRootFolderName = "SMG2AP";
     public const string RiivolutionFolderName = "riivolution";
-    public static readonly string[] SMG1CopyFiles = ["ObjectData/IceLuigi.arc", "ObjectData/IceMario.arc", "ObjectData/IceMarioHandL.arc", "ObjectData/IceMarioHandR.arc", "ObjectData/IceStep.arc", "ObjectData/IceStepNoSlip.arc"];
     public static bool IsGeneratedMod ()
     {
         return Directory.Exists(ModOutputFolder);
@@ -45,7 +44,7 @@ class Builder
         File.WriteAllText(Path.Combine(ModOutputFolder, "..", "SMG2AP.json"), JsonSerializer.Serialize(preset, options));
         return true;
     }
-    public static async Task<bool> GenerateMod (string gamePath, string gameidWithRegion, string outputPath)
+    public static async Task<bool> GenerateMod (string smg2Path, string? smg1Path, string gameidWithRegion, string outputPath)
     {
         bool fullyGenerated = false;
         string patchPath = Path.Combine(PatchPath, gameidWithRegion);
@@ -68,7 +67,7 @@ class Builder
         Directory.CreateDirectory(toPath);
         try
         {
-            if (DolphinHelper.smg1path is not null)
+            /*if (DolphinHelper.smg1path is not null)
             {
                 Console.WriteLine("Copying Ice Mario assets...");
                 foreach (string file in SMG1CopyFiles)
@@ -83,14 +82,14 @@ class Builder
                     }
                     File.Copy(from, to);
                 }
-            }
+            }*/
 
             Console.WriteLine("Applying copy patches...");
             foreach (string copyPatchFile in Directory.GetFiles(Path.Combine(patchPath, "copy")))
             {
                 string jsonString = File.ReadAllText(copyPatchFile);
                 CopyPatches patches = CopyPatches.Load(jsonString);
-                if (!patches.ApplyAll(Path.Combine(patchPath, "copy"), toPath))
+                if (!patches.ApplyAll(smg2Path, smg1Path, Path.Combine(patchPath, "copy"), toPath))
                 {
                     Console.WriteLine("Stop.");
                     return false;
@@ -101,7 +100,7 @@ class Builder
             {
                 string jsonString = File.ReadAllText(arcPatchFile);
                 RarcPatches patches = RarcPatches.Load(jsonString);
-                if (!patches.ApplyAll(gamePath, Path.Combine(patchPath, "arc"), toPath))
+                if (!patches.ApplyAll(smg2Path, Path.Combine(patchPath, "arc"), toPath))
                 {
                     Console.WriteLine("Stop.");
                     return false;
@@ -112,7 +111,7 @@ class Builder
             {
                 string jsonString = File.ReadAllText(bcsvPatchFile);
                 BcsvPatches patches = BcsvPatches.Load(jsonString);
-                if (!patches.ApplyAll(gamePath, toPath))
+                if (!patches.ApplyAll(smg2Path, toPath))
                 {
                     Console.WriteLine("Stop.");
                     return false;
@@ -126,7 +125,7 @@ class Builder
                 foreach (string languageDir in Directory.GetDirectories(Path.Combine(patchPath, "msbt")))
                 {
                     string curDir = new DirectoryInfo(languageDir).Name ?? throw new NullReferenceException();
-                    if (!patches.ApplyAll(Path.Combine(gamePath, "LocalizeData", curDir), Path.Combine(patchPath, "brfnt"), Path.Combine(toPath, "LocalizeData", curDir)))
+                    if (!patches.ApplyAll(Path.Combine(smg2Path, "LocalizeData", curDir), Path.Combine(patchPath, "brfnt"), Path.Combine(toPath, "LocalizeData", curDir)))
                     {
                         Console.WriteLine("Stop.");
                         return false;
@@ -138,7 +137,7 @@ class Builder
             {
                 string jsonString = File.ReadAllText(brkPatchFile);
                 BrkPatches patches = BrkPatches.Load(jsonString);
-                if (!patches.ApplyAll(gamePath, toPath))
+                if (!patches.ApplyAll(smg2Path, toPath))
                 {
                     Console.WriteLine("Stop.");
                     return false;
@@ -152,7 +151,7 @@ class Builder
                 foreach (string languageDir in Directory.GetDirectories(Path.Combine(patchPath, "msbt")))
                 {
                     string curDir = new DirectoryInfo(languageDir).Name ?? throw new NullReferenceException();
-                    if (!patches.ApplyAll(Path.Combine(gamePath, "LocalizeData", curDir, "MessageData"), Path.Combine(toPath, "LocalizeData", curDir, "MessageData")))
+                    if (!patches.ApplyAll(Path.Combine(smg2Path, "LocalizeData", curDir, "MessageData"), Path.Combine(toPath, "LocalizeData", curDir, "MessageData")))
                     {
                         Console.WriteLine("Stop.");
                         return false;
@@ -168,7 +167,7 @@ class Builder
                 foreach (string languageDir in Directory.GetDirectories(msbtPatchPath))
                 {
                     string curDir = new DirectoryInfo(languageDir).Name ?? throw new NullReferenceException();
-                    if (!patches.ApplyAll(Path.Combine(gamePath, "LocalizeData", curDir, "MessageData"), languageDir, Path.Combine(toPath, "LocalizeData", curDir, "MessageData")))
+                    if (!patches.ApplyAll(Path.Combine(smg2Path, "LocalizeData", curDir, "MessageData"), languageDir, Path.Combine(toPath, "LocalizeData", curDir, "MessageData")))
                     {
                         Console.WriteLine("Stop.");
                         return false;

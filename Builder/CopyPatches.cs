@@ -1,21 +1,48 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using Avalonia.Platform.Surfaces;
 
 class CopyPatches
 {
-    public List<string> filesToCopy = new();
+    public class CopyPatch
+    {
+        public required string path;
+        public string? path_from_smg2;
+        public string? path_from_smg1;
+    }
+    public List<CopyPatch> filesToCopy = new();
     public static CopyPatches Load (string jsonString)
     {
-        return new CopyPatches {filesToCopy = JsonSerializer.Deserialize<List<string>>(jsonString)!};
+        var options = new JsonSerializerOptions
+        {
+            IncludeFields = true,
+            Converters = { new JsonStringEnumConverter() }
+        };
+        return new CopyPatches {filesToCopy = JsonSerializer.Deserialize<List<CopyPatch>>(jsonString, options)!};
     }
     
-    public bool ApplyAll (string pathToExternal, string outputPath)
+    public bool ApplyAll (string pathToSMG2, string? pathToSMG1, string pathToExternal, string outputPath)
     {
-        foreach (string file in filesToCopy)
+        foreach (var patch in filesToCopy)
         {
-            string from = Path.Combine(pathToExternal, file);
-            string to = Path.Combine(outputPath, file);
+            string from;
+            if (patch.path_from_smg2 is not null)
+            {
+                from = Path.Combine(pathToSMG2, patch.path_from_smg2);
+            }
+            else if (patch.path_from_smg1 is not null)
+            {
+                if (pathToSMG1 is null) 
+                    continue;
+                from = Path.Combine(pathToSMG1, patch.path_from_smg1);
+            }
+            else
+            {
+                from = Path.Combine(pathToExternal, patch.path);
+            }
+            string to = Path.Combine(outputPath, patch.path);
             string? toDirName = Path.GetDirectoryName(to);
             if (toDirName is not null && !Directory.Exists(toDirName))
             {

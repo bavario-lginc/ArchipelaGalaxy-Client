@@ -46,11 +46,18 @@ class BcsvPatches
             {
                 BCSV bcsv = new();
                 RARC.File? bcsvInArc = (RARC.File?)(arc[bcsvFile] ?? null);
-                if (bcsvInArc is null) 
+                if (bcsvInArc is null)
+                {
+                    Console.WriteLine($"Warning: Couldn't find bcsv file {bcsvFile} in arc, skipping...");
                     continue;
+                }
                 bcsv.Load((MemoryStream)bcsvInArc);
                 foreach (BcsvPatch patch in patchesPerBcsv)
                 {
+                    if (file == "StageData/MarioFaceShipZone/MarioFaceShipZoneMap.arc" && bcsvFile == "Stage/jmp/Placement/LayerA/ObjInfo")
+                    {
+                        Console.WriteLine("Helo");
+                    }
                     patch.Apply(bcsv);
                 }
                 RARC.File newBcsvInArc = new () { Name = Path.GetFileName(bcsvFile) };

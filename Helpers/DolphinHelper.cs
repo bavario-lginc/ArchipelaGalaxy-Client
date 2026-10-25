@@ -185,7 +185,7 @@ class DolphinHelper
             string bootBinPath = Path.Combine(outputPath, "DATA", "sys", "boot.bin");
             if (!File.Exists(bootBinPath))
                 return (null, null);
-            char region = 'H';
+            char region = 'h';
             using (FileStream fs = new(bootBinPath, FileMode.Open))
             {
                 foreach (char gameIdLetter in gameid)

@@ -58,6 +58,7 @@ class BcsvPatch
                 if (!bcsv.ContainsField(hash))
                 {
                     Console.WriteLine("excuse me what the fuck");
+                    return;
                 }
                 var field = bcsv[hash];
                 if (current.value_str is not null)

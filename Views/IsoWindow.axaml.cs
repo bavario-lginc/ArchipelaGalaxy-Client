@@ -167,7 +167,7 @@ namespace ArchipelaGalaxy.Views {
             var folder = await AvaloniaHelper.OpenFolderPicker(this, OpenOptions);
             if (DolphinHelper.smg2path is not null && DolphinHelper.smg2GameIdWithRegion is not null && folder is not null && folder.Count > 0)
             {
-                bool success = await Builder.GenerateMod(DolphinHelper.smg2path, DolphinHelper.smg2GameIdWithRegion, folder[0].Path.LocalPath);
+                bool success = await Builder.GenerateMod(DolphinHelper.smg2path, DolphinHelper.smg1path, DolphinHelper.smg2GameIdWithRegion, folder[0].Path.LocalPath);
                 if (success)
                 {
                     Close();

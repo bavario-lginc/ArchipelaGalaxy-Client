@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Hack.io.MSBT;
 using Hack.io.Utility;
 
@@ -141,29 +142,8 @@ class MsbtPatch
 
     private string ReadAndPrepareText (MSBT msbt, string path)
     {
-        string result = "";
-        byte[] txtBytes = File.ReadAllBytes(path);
-        for (int i = 0; i < txtBytes.Length; i++)
-        {
-            char current = (char)txtBytes[i];
-            switch (current)
-            {
-                case '[':
-                    string tag = "";
-                    i++;
-                    while (txtBytes[i] != ']')
-                    {
-                        tag += (char)txtBytes[i];
-                        i++;
-                    }
-                    result += ToHackIoTag(msbt, tag);
-                    break;
-                default:
-                    result += current;
-                    break;
-            }
-        }
-        return result;
+        // Regex made by Claude
+        return Regex.Replace(File.ReadAllText(path), @"\[([^\]]*)\]", m => ToHackIoTag(msbt, m.Groups[1].Value));
     }
 
     public bool Apply (MSBT msbt, string pathToTxtFolder)
