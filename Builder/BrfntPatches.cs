@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Hack.io.RARC;
 using Hack.io.Utility;
 using Hack.io.YAZ0;
@@ -46,7 +47,7 @@ class BrfntPatches
         return ms;
     }
 
-    public bool ApplyAll (string pathToGame, string pathToTextures, string outputPath)
+    public async Task<bool> ApplyAll (string pathToGame, string pathToTextures, string outputPath)
     {
         foreach ((string file, var patchesPerArc) in this.patches)
         {

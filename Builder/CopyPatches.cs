@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Avalonia.Platform.Surfaces;
 
 class CopyPatches
@@ -23,7 +24,7 @@ class CopyPatches
         return new CopyPatches {filesToCopy = JsonSerializer.Deserialize<List<CopyPatch>>(jsonString, options)!};
     }
     
-    public bool ApplyAll (string pathToSMG2, string? pathToSMG1, string pathToExternal, string outputPath)
+    public async Task<bool> ApplyAll (string pathToSMG2, string? pathToSMG1, string pathToExternal, string outputPath)
     {
         foreach (var patch in filesToCopy)
         {

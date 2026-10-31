@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using System.Collections.Generic;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 class MsbtPatches
 {
@@ -23,7 +24,7 @@ class MsbtPatches
         return new MsbtPatches {patches = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<MsbtPatch>>>>(jsonString, options)!};
     }
 
-    public bool ApplyAll (string pathToGame, string pathToTxts, string outputPath)
+    public async Task<bool> ApplyAll (string pathToGame, string pathToTxts, string outputPath)
     {
         foreach ((string file, var patchesPerArc) in this.patches)
         {

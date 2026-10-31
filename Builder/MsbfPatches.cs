@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using System.Collections.Generic;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 class MsbfPatches
 {
@@ -23,7 +24,7 @@ class MsbfPatches
         return new MsbfPatches {patches = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<MsbfPatch>>>>(jsonString, options)!};
     }
 
-    public bool ApplyAll (string pathToGame, string outputPath)
+    public async Task<bool> ApplyAll (string pathToGame, string outputPath)
     {
         foreach ((string file, var patchesPerArc) in this.patches)
         {

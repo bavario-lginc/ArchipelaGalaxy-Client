@@ -77,7 +77,6 @@ class BcsvPatch
                     continue;
                 }
             }
-            bcsv.Entries.Add(newEntry);
             return;
         }
         var entry = bcsv.Entries.Find((entry) => {

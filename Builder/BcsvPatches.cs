@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 class BcsvPatches
 {
@@ -22,7 +23,7 @@ class BcsvPatches
         return new BcsvPatches {patches = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<BcsvPatch>>>>(jsonString, options)!};
     }
 
-    public bool ApplyAll (string pathToGame, string outputPath)
+    public async Task<bool> ApplyAll (string pathToGame, string outputPath)
     {
         foreach ((string file, var patchesPerArc) in this.patches)
         {
@@ -54,10 +55,6 @@ class BcsvPatches
                 bcsv.Load((MemoryStream)bcsvInArc);
                 foreach (BcsvPatch patch in patchesPerBcsv)
                 {
-                    if (file == "StageData/MarioFaceShipZone/MarioFaceShipZoneMap.arc" && bcsvFile == "Stage/jmp/Placement/LayerA/ObjInfo")
-                    {
-                        Console.WriteLine("Helo");
-                    }
                     patch.Apply(bcsv);
                 }
                 RARC.File newBcsvInArc = new () { Name = Path.GetFileName(bcsvFile) };

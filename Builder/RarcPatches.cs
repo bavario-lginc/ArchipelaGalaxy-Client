@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 class RarcPatches
 {
@@ -33,7 +34,7 @@ class RarcPatches
         }
     }
 
-    public bool ApplyAll (string pathToGame, string pathToExternal, string outputPath)
+    public async Task<bool> ApplyAll (string pathToGame, string pathToExternal, string outputPath)
     {
         foreach ((string file, List<RarcPatch> patches) in this.patches)
         {
