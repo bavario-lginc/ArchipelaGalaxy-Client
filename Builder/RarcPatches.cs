@@ -60,7 +60,7 @@ class RarcPatches
                         arc.Root.Name = patch.root_name;
                     continue;
                 }
-                patch.Apply(arc, pathToExternal);
+                patch.Apply(arc, pathToExternal, pathToGame);
             }
             string fileOutPath = Path.Combine(outputPath, file);
             if (!Directory.Exists(Path.GetDirectoryName(fileOutPath)))
