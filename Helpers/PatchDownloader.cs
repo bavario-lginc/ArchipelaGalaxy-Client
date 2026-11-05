@@ -7,7 +7,7 @@ using ArchipelaGalaxy.Views;
 
 class PatchDownloader
 {
-    public const string PatchDownloadURL = "https://github.com/bavario-lginc/SMG2-Archipelago/releases/latest/download";
+    public const string PatchDownloadURL = "https://github.com/bavario-lginc/SMG2-Archipelago-Patch/releases/latest/download";
     public const string PatchPath = "Patch/";
     public static async Task<bool> GetPatch (string gameidWithRegion)
     {
