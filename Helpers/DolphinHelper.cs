@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text.Json;
+using System.Threading.Tasks;
+using ArchipelaGalaxy.Views;
 using Avalonia.Utilities;
 
 class DolphinHelper
@@ -18,6 +21,7 @@ class DolphinHelper
     public static readonly string[] DolphinToolExeNames = ["DolphinTool.exe", "DolphinTool", "dolphin-tool"];
     public static readonly string[] ExtractCommand = ["extract", "-p", "DATA"];
     public static readonly string[] SupportedExtensions = ["*.iso", "*.wbfs", "*.rvz", "*.gcz", "*.wia"];
+    public const string DolphinToolDownloadURL = "https://github.com/bavario-lginc/DolphinToolExecutables/releases/latest/download";
 
     public static string? smg2path;
     public static string? smg2IsoPath;
@@ -46,6 +50,7 @@ class DolphinHelper
     public static bool isFlatpak = false;
     
     public static readonly string[] CommonDolphinPaths_Windows = [
+        "Output",
         "C:\\Program Files\\Dolphin",
         "C:\\Program Files\\Dolphin-x64",
         "C:\\Program Files\\Dolphin Emulator",
@@ -55,10 +60,12 @@ class DolphinHelper
     ];
     public static readonly string[] CommonDolphinToolPaths_Windows = CommonDolphinPaths_Windows;
     public static readonly string[] CommonDolphinPaths_Linux = [
+        "Output",
         "/usr/bin/",
         "/usr/local/bin/"
     ];
     public static readonly string[] CommonDolphinToolPaths_Linux = [
+        "Output",
         "/usr/bin/",
         "/usr/local/bin/"
     ];
@@ -297,6 +304,48 @@ class DolphinHelper
             }
         }
         return (DolphinPath, DolphinToolPath);
+    }
+
+    public static async Task<bool> DownloadDolphinToolAsync ()
+    {
+        string downloadPath = "dolphin-tool-";
+        downloadPath += RuntimeInformation.OSArchitecture switch
+        {
+            Architecture.X64 => "x64-",
+            Architecture.Arm => "arm-",
+            Architecture.Arm64 => "arm64-",
+            _ => throw new PlatformNotSupportedException("There is no DolphinTool hosted for your architecture."),
+        };
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            downloadPath += "win32.exe";
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            downloadPath += "darwin";
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            downloadPath += "linux";
+        }
+        downloadPath = Path.Combine(DolphinToolDownloadURL, downloadPath);
+        
+        try
+        {
+            using var client = new HttpClient();
+            using var stream = await client.GetStreamAsync(downloadPath);
+            string dest = Path.Combine(OutputPath, "dolphin-tool");
+            using var executable = File.Create(dest);
+            stream.CopyTo(executable);
+            DolphinToolPath = dest;
+            return true;
+        }
+        catch (Exception e)
+        {
+            var errorWindow = new ErrorWindow("Error while downloading DolphinTool", e.ToString());
+            errorWindow.Show();
+            return false;
+        }
     }
 
     public static void LaunchMod ()

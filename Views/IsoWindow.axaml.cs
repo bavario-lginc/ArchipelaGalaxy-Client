@@ -28,7 +28,7 @@ namespace ArchipelaGalaxy.Views {
             {
                 ValidateSMG2(DolphinHelper.GetSMG2RegionPretty() ?? "");
             }
-            _ = InitDolphinPath();
+            Opened += async (_, _) => await InitDolphinPath();
         }
 
         public async Task InitDolphinPath ()
@@ -36,22 +36,17 @@ namespace ArchipelaGalaxy.Views {
             string? dolphinTool = DolphinHelper.GetDolphinPaths().Item2;
             if (dolphinTool is null)
             {
-                IReadOnlyList<FilePickerFileType> PickerExtension = [new("Executable") { Patterns = ["*.exe", "dolphin-tool", "DolphinTool*"] }];
-                FilePickerOpenOptions OpenOptions = new() {
-                    AllowMultiple = false,
-                    FileTypeFilter = PickerExtension,
-                    Title = "Please select your DolphinTool executable (in your Dolphin Emulator folder)"
+                Console.WriteLine("Opening DolphinToolPrompt");
+                var dolphinToolPrompt = new DolphinToolPrompt();
+                dolphinToolPrompt.Show(this);
+                dolphinToolPrompt.Closed += (_, _) =>
+                {
+                    dolphinTool = DolphinHelper.GetDolphinPaths().Item2;
+                    if (dolphinTool is null)
+                    {
+                        Close();
+                    }
                 };
-                var files = await AvaloniaHelper.OpenFilePicker(this, OpenOptions);
-                if (files is not null && files.Count > 0)
-                {
-                    DolphinHelper.DolphinToolPath = files[0].Path.LocalPath;
-                }
-                else
-                {
-                    var errorWindow = new ErrorWindow("Invalid Dolphin Emulator folder", "You specified an invalid Dolphin Emulator folder. Please ensure that the following files exist:\n\t- Dolphin(.exe)\n\t- DolphinTool(.exe)");
-                    await errorWindow.ShowDialog(this);
-                }
             }
         }
 
