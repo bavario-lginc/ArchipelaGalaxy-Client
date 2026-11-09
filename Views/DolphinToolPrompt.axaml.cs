@@ -46,5 +46,18 @@ namespace ArchipelaGalaxy.Views
                 await errorWindow.ShowDialog(this);
             }
         }
+
+        public async void ScanRunningExe(object? sender, RoutedEventArgs args)
+        {
+            if (DolphinHelper.TryGetDolphinPathsWhileRunning() && DolphinHelper.DolphinToolPath is not null)
+            {
+                Close();
+            }
+            else
+            {
+                var errorWindow = new ErrorWindow("Cannot find DolphinTool", "Dolphin Emulator is either not running or DolphinTool was not found through it.\nPlease try again or pick another method.");
+                await errorWindow.ShowDialog(this);
+            }
+        }
     }
 }

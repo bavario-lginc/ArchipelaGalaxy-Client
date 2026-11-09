@@ -1,0 +1,64 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ArchipelaGalaxy.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="ArchipelaGalaxy.Views.DolphinPrompt"
+        Width="550"
+        Height="400"
+        Icon="/Assets/Icon.ico"
+        Title="ArchipelaGalaxy: Dolphin not found"
+        CanResize="False">
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Panel>
+        <StackPanel>
+            <TextBlock 
+                Text="Dolphin was not found!"
+                FontSize="25.0"
+                TextAlignment="Center"
+                Margin="0 20 0 0" />
+            <TextBlock
+                FontSize="17.0"
+                Margin="20 20 0 0"
+                Text="To use the Quick Launch feature, ArchipelaGalaxy needs Dolphin" />
+            <TextBlock
+                FontSize="17.0"
+                Margin="20 0 0 0"
+                Text="but was not able to find it." />
+            <TextBlock
+                FontSize="17.0"
+                Margin="20 10 0 0"
+                Text="You have one of these options to get the executable:" />
+            <TextBlock
+                FontSize="22.0"
+                Margin="20 20 0 0"
+                FontStyle="Italic"
+                Text="1. Open Dolphin Emulator, then press Scan:" />
+            <Button
+                Margin="20 10 0 0"
+                Padding="10"
+                FontSize="17.0"
+                HorizontalAlignment="Left"
+                Click="ScanRunningExe">
+                Scan...
+            </Button>
+                <TextBlock
+                FontSize="22.0"
+                Margin="20 20 0 0"
+                FontStyle="Italic"
+                Text="2. Select existing Dolphin executable:" />
+            <Button
+                Margin="20 10 0 0"
+                Padding="10"
+                FontSize="17.0"
+                HorizontalAlignment="Left"
+                Click="Select">
+                Select...
+            </Button>
+        </StackPanel>
+    </Panel>
+</Window>

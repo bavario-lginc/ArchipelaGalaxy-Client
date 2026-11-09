@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         x:Class="ArchipelaGalaxy.Views.DolphinToolPrompt"
         Width="550"
-        Height="400"
+        Height="500"
         Icon="/Assets/Icon.ico"
         Title="ArchipelaGalaxy: Select or Download DolphinTool"
         CanResize="False">
@@ -32,12 +32,25 @@
             <TextBlock
                 FontSize="17.0"
                 Margin="20 10 0 0"
-                Text="Please choose one of these two options to get it:" />
+                Text="You have one of these options to get it:" />
             <TextBlock
                 FontSize="22.0"
                 Margin="20 20 0 0"
                 FontStyle="Italic"
-                Text="1. Select existing executable:" />
+                Text="1. Open Dolphin Emulator, then press Scan:" />
+            <Button
+                Margin="20 10 0 0"
+                Padding="10"
+                FontSize="17.0"
+                HorizontalAlignment="Left"
+                Click="ScanRunningExe">
+                Scan...
+            </Button>
+                <TextBlock
+                FontSize="22.0"
+                Margin="20 20 0 0"
+                FontStyle="Italic"
+                Text="2. Select existing DolphinTool executable:" />
             <Button
                 Margin="20 10 0 0"
                 Padding="10"
@@ -50,7 +63,7 @@
                 FontSize="22.0"
                 Margin="20 20 0 0"
                 FontStyle="Italic"
-                Text="2. Download executable:" />
+                Text="3. Download DolphinTool:" />
             <Button
                 Margin="20 10 0 0"
                 Padding="10"

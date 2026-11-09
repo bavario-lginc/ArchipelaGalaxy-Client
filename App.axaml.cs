@@ -7,7 +7,9 @@ using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Fonts;
 using System;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace ArchipelaGalaxy;
@@ -36,6 +38,40 @@ public partial class App : Application {
         }
     }
 
+    private void OpenDolphinToolPrompt (IClassicDesktopStyleApplicationLifetime desktop)
+    {
+        var dolphinToolPrompt = new DolphinToolPrompt();
+        desktop.MainWindow = dolphinToolPrompt;
+        dolphinToolPrompt.Closed += (_, _) =>
+        {
+            if (DolphinHelper.DolphinToolPath is not null)
+            {
+                OpenIsoWindow(desktop);
+            }
+        };
+    }
+
+    private void OpenIsoWindow (IClassicDesktopStyleApplicationLifetime desktop)
+    {
+        Console.WriteLine("Opening IsoWindow");
+        var isoWindow = new IsoWindow();
+        isoWindow.Show();
+        desktop.MainWindow = isoWindow;
+        isoWindow.Closed += (_, _) =>
+        {
+            if (Builder.IsGeneratedMod())
+            {
+                OpenMainWindow(desktop);
+            }
+        };
+    }
+
+    private void OpenMainWindow (IClassicDesktopStyleApplicationLifetime desktop)
+    {
+        desktop.MainWindow = new MainWindow();
+        desktop.MainWindow.Show();
+    }
+
     public override void OnFrameworkInitializationCompleted() {
         Avalonia.Threading.Dispatcher.UIThread.UnhandledException += (_, e) => {
             e.Handled = true;
@@ -54,22 +90,18 @@ public partial class App : Application {
             DolphinHelper.Init();
             if (!Builder.IsGeneratedMod())
             {
-                Console.WriteLine("Opening IsoWindow");
-                var isoWindow = new IsoWindow();
-                desktop.MainWindow = isoWindow;
-                isoWindow.Closed += (_, _) =>
+                if (DolphinHelper.DolphinToolPath is null)
                 {
-                    if (Builder.IsGeneratedMod())
-                    {
-                        desktop.MainWindow = new MainWindow();
-                        desktop.MainWindow.Show();
-                    }
-                };
+                    OpenDolphinToolPrompt(desktop);
+                }
+                else
+                {
+                    OpenIsoWindow(desktop);
+                }
             }
             else
             {
-                desktop.MainWindow = new MainWindow();
-                desktop.MainWindow.Show();
+                OpenMainWindow(desktop);
             }
         }
         

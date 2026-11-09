@@ -19,9 +19,23 @@ namespace ArchipelaGalaxy.Views {
             ViewModel = new MainWindowViewModel();
         }
 
+        private void OpenDolphinPrompt ()
+        {
+            Console.WriteLine("Opening DolphinPrompt");
+            var dolphinPrompt = new DolphinPrompt();
+            dolphinPrompt.Show();
+        }
+
         public void OpenDolphin(object? sender, RoutedEventArgs args)
         {
-            DolphinHelper.LaunchMod();
+            if (DolphinHelper.DolphinPath is null)
+            {
+                OpenDolphinPrompt();
+            }
+            else
+            {
+                DolphinHelper.LaunchMod();
+            }
         }
 
         public void OpenIsoWindow(object? sender, RoutedEventArgs args)

@@ -101,6 +101,8 @@ class DolphinHelper
 
     public static void Init ()
     {
+        InitDolphinToolPath();
+        InitDolphinPath();
         if (!Directory.Exists(OutputPath))
         {
             Directory.CreateDirectory(OutputPath);
@@ -125,41 +127,49 @@ class DolphinHelper
             }
         }
     }
-    public static (string?, string?) GetDolphinExePaths (string? path)
+    
+    public static (string?, string?) GetDolphinPathsFromFolder (string? path)
     {
         if (path is null) 
             return (null, null);
+        string? dolphinPath = null;
+        string? dolphinToolPath = null;
         foreach (string dolphinExeName in DolphinExeNames)
         {
-            string currentDolExe = Path.Combine(path, dolphinExeName);
-            if (File.Exists(currentDolExe))
+            string currentExe = Path.Combine(path, dolphinExeName);
+            if (File.Exists(currentExe))
             {
-                foreach (string dolphinToolExeName in DolphinToolExeNames)
-                {
-                    string currentToolExe = Path.Combine(path, dolphinToolExeName);
-                    if (File.Exists(currentToolExe)) 
-                        return (currentDolExe, currentToolExe);
-                }
-                continue;
+                dolphinPath = currentExe;
+                break;
             }
         }
-        return (null, null);
+        foreach (string dolphinToolExeName in DolphinToolExeNames)
+        {
+            string currentExe = Path.Combine(path, dolphinToolExeName);
+            if (File.Exists(currentExe))
+            {
+                dolphinToolPath = currentExe;
+                break;
+            }
+        }
+        return (dolphinPath, dolphinToolPath);
     }
-    public static (string?, string?) GetDolphinExePaths (string[] paths)
+    public static (string?, string?) GetDolphinPathsFromFolder (string[] paths)
     {
         (string? dolExe, string? toolExe) = (null, null);
         foreach (string path in paths)
         {
-            (string? currentDolExe, string? currentToolExe) = GetDolphinExePaths(path);
+            (string? currentDolExe, string? currentToolExe) = GetDolphinPathsFromFolder(path);
             (dolExe, toolExe) = (currentDolExe ?? dolExe, currentToolExe ?? toolExe);
-            if ((dolExe, toolExe) is not (null, null)) 
-                return (dolExe, toolExe);
+            if (dolExe is not null && toolExe is not null) 
+                break;
         }
         return (dolExe, toolExe);
     }
+
     public static bool ExtractIso (string isoPath, string outputPath)
     {
-        if (DolphinPath is null)
+        if (DolphinToolPath is null)
             return false;
         if (Directory.Exists(outputPath))
         {
@@ -174,8 +184,6 @@ class DolphinHelper
         }
         else
         {
-            if (DolphinToolPath is null)
-                return false;
             using Process dolphinTool = Process.Start(DolphinToolPath, command);
             dolphinTool.WaitForExit();
             return dolphinTool.ExitCode == 0;
@@ -219,7 +227,7 @@ class DolphinHelper
                 }
             }
             Console.WriteLine($"Error: Unknown region {region}. Cannot use ISO.");
-            return (null, null);   
+            return (null, null);
         }
         finally
         {
@@ -249,17 +257,9 @@ class DolphinHelper
         }
         return smg1path;
     }
-    public static (string?, string?) GetDolphinPaths ()
+
+    public static bool TryGetDolphinPathsWhileRunning ()
     {
-        if (DolphinPath is not null && DolphinToolPath is not null)
-            return (DolphinPath, DolphinToolPath);
-        if (Config.data!.DolphinPath is not null && Config.data.DolphinToolPath is not null)
-        {
-            dolphinPath = Config.data.DolphinPath;
-            dolphinToolPath = Config.data.DolphinToolPath;
-            return (dolphinPath, dolphinToolPath);
-        }
-        // Try grabbing running process
         List<Process> pname = [];
         foreach (string dolphinExeName in DolphinExeNames)
         {
@@ -276,12 +276,14 @@ class DolphinHelper
             string? pathToDolphinDir = Path.GetDirectoryName(process.MainModule.FileName);
             if (pathToDolphinDir is null) 
                 continue;
-            (DolphinPath, DolphinToolPath) = GetDolphinExePaths(pathToDolphinDir);
-            if ((DolphinPath, DolphinToolPath) is (null, null))
-                continue;
-            return (DolphinPath, DolphinToolPath);
+            (DolphinPath, DolphinToolPath) = GetDolphinPathsFromFolder(pathToDolphinDir);
+            if ((DolphinPath, DolphinToolPath) is not (null, null))
+                return true;
         }
-        // Otherwise: Check common paths
+        return false;
+    }
+    public static bool TryGetDolphinPathsCommonPaths ()
+    {
         string[] CommonDolphinPaths = [];
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
@@ -291,19 +293,49 @@ class DolphinHelper
         {
             CommonDolphinPaths = CommonDolphinPaths_Linux;
         }
-        (DolphinPath, DolphinToolPath) = GetDolphinExePaths(CommonDolphinPaths);
+        (DolphinPath, DolphinToolPath) = GetDolphinPathsFromFolder(CommonDolphinPaths);
         if ((DolphinPath, DolphinToolPath) is (null, null))
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 CommonDolphinPaths = CommonDolphinPaths_Flatpak;
-                (DolphinPath, DolphinToolPath) = GetDolphinExePaths(CommonDolphinPaths);
-                if ((DolphinPath, DolphinToolPath) is not (null, null))
-                    isFlatpak = true;
-                return (DolphinPath, DolphinToolPath);
+                (DolphinPath, DolphinToolPath) = GetDolphinPathsFromFolder(CommonDolphinPaths);
+                if ((DolphinPath, DolphinToolPath) is (null, null))
+                    return false;
+                isFlatpak = true;
             }
         }
-        return (DolphinPath, DolphinToolPath);
+        return true;
+    }
+    public static bool InitDolphinToolPath ()
+    {
+        if (DolphinToolPath is not null)
+            return true;
+        if (Config.data!.DolphinToolPath is not null)
+        {
+            dolphinToolPath = Config.data.DolphinToolPath;
+            return true;
+        }
+        if (TryGetDolphinPathsWhileRunning() && DolphinToolPath is not null)
+            return true;
+        if (TryGetDolphinPathsCommonPaths() && DolphinToolPath is not null) 
+            return true;
+        return false;
+    }
+    public static bool InitDolphinPath ()
+    {
+        if (DolphinPath is not null)
+            return true;
+        if (Config.data!.DolphinPath is not null)
+        {
+            dolphinPath = Config.data.DolphinPath;
+            return true;
+        }
+        if (TryGetDolphinPathsWhileRunning() && DolphinPath is not null)
+            return true;
+        if (TryGetDolphinPathsCommonPaths() && DolphinPath is not null) 
+            return true;
+        return false;
     }
 
     public static async Task<bool> DownloadDolphinToolAsync ()
@@ -334,10 +366,22 @@ class DolphinHelper
         {
             using var client = new HttpClient();
             using var stream = await client.GetStreamAsync(downloadPath);
-            string dest = Path.Combine(OutputPath, "dolphin-tool");
+            string dest = "";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                dest = Path.Combine(OutputPath, "DolphinTool.exe");
+            }
+            else
+            {
+                dest = Path.Combine(OutputPath, "dolphin-tool");    
+            }
             using var executable = File.Create(dest);
             stream.CopyTo(executable);
             DolphinToolPath = dest;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Process.Start("chmod", ["+x", dest]);
+            }
             return true;
         }
         catch (Exception e)
@@ -350,8 +394,8 @@ class DolphinHelper
 
     public static void LaunchMod ()
     {
-        var path = GetDolphinPaths().Item1;
-        if (path is null)
+        InitDolphinPath();
+        if (DolphinPath is null)
             return;
         Process dolphin;
         List<string> args = ["-e", Path.Combine(OutputPath, "SMG2AP.json"), "-C", "Dolphin.Core.RAMOverrideEnable=False"];
@@ -361,7 +405,7 @@ class DolphinHelper
         }
         else
         {
-            dolphin = Process.Start(path, args);
+            dolphin = Process.Start(DolphinPath, args);
         }
     }
 }

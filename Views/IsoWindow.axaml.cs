@@ -33,16 +33,14 @@ namespace ArchipelaGalaxy.Views {
 
         public async Task InitDolphinPath ()
         {
-            string? dolphinTool = DolphinHelper.GetDolphinPaths().Item2;
-            if (dolphinTool is null)
+            if (DolphinHelper.DolphinToolPath is null)
             {
                 Console.WriteLine("Opening DolphinToolPrompt");
                 var dolphinToolPrompt = new DolphinToolPrompt();
                 dolphinToolPrompt.Show(this);
                 dolphinToolPrompt.Closed += (_, _) =>
                 {
-                    dolphinTool = DolphinHelper.GetDolphinPaths().Item2;
-                    if (dolphinTool is null)
+                    if (DolphinHelper.DolphinToolPath is null)
                     {
                         Close();
                     }
@@ -100,7 +98,7 @@ namespace ArchipelaGalaxy.Views {
         public async void SelectSMG2Iso(object? sender, RoutedEventArgs args)
         {
             await InitDolphinPath();
-            if (DolphinHelper.DolphinPath is null)
+            if (DolphinHelper.DolphinToolPath is null)
                 return;
 
             IReadOnlyList<FilePickerFileType> PickerExtension = [new("Disc Image (.iso/.wbfs/.rvz/.gcz/.wia)") { Patterns = DolphinHelper.SupportedExtensions }];
@@ -129,7 +127,7 @@ namespace ArchipelaGalaxy.Views {
         public async void SelectSMG1Iso(object? sender, RoutedEventArgs args)
         {
             await InitDolphinPath();
-            if (DolphinHelper.DolphinPath is null)
+            if (DolphinHelper.DolphinToolPath is null)
                 return;
 
             IReadOnlyList<FilePickerFileType> PickerExtension = [new("Disc Image (.iso/.wbfs/.rvz/.gcz/.wia)") { Patterns = DolphinHelper.SupportedExtensions }];
