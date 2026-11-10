@@ -142,8 +142,21 @@ class MsbtPatch
 
     private string ReadAndPrepareText (MSBT msbt, string path)
     {
-        // Regex made by Claude
-        return Regex.Replace(File.ReadAllText(path), @"\[([^\]]*)\]", m => ToHackIoTag(msbt, m.Groups[1].Value));
+        string msbtText = File.ReadAllText(path);
+        var tag = msbtText.Split('[', ']');
+        string result = "";
+        for (int i = 0; i < tag.Length; i++)
+        {
+            if (i % 2 == 0)
+            {
+                result += tag[i];
+            }
+            else
+            {
+                result += ToHackIoTag(msbt, tag[i]);
+            }
+        }
+        return result;
     }
 
     public bool Apply (MSBT msbt, string pathToTxtFolder)
