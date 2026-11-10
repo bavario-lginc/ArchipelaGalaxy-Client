@@ -160,7 +160,14 @@ namespace ArchipelaGalaxy.Views {
             var folder = await AvaloniaHelper.OpenFolderPicker(this, OpenOptions);
             if (DolphinHelper.smg2path is not null && DolphinHelper.smg2GameIdWithRegion is not null && folder is not null && folder.Count > 0)
             {
-                bool success = await Builder.GenerateMod(DolphinHelper.smg2path, DolphinHelper.smg1path, DolphinHelper.smg2GameIdWithRegion, folder[0].Path.LocalPath);
+                var path = folder[0].TryGetLocalPath();
+                if (path is null)
+                {
+                    var errorWindow = new ErrorWindow("Invalid Output Path", "The Output Path is invalid. Please pick a different one.");
+                    await errorWindow.ShowDialog(this);
+                    return;
+                }
+                bool success = await Builder.GenerateMod(DolphinHelper.smg2path, DolphinHelper.smg1path, DolphinHelper.smg2GameIdWithRegion, path);
                 if (success)
                 {
                     Close();
