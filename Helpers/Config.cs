@@ -14,6 +14,8 @@ class Config
         public string? DolphinPath;
         [JsonPropertyName("DolphinToolPath")]
         public string? DolphinToolPath;
+        [JsonPropertyName("IsFlatpak")]
+        public bool? IsFlatpak;
     }
     public static ConfigData? data;
 

@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ArchipelaGalaxy.Helpers;
 using ArchipelaGalaxy.Views;
 using Avalonia.Utilities;
 
@@ -47,7 +48,16 @@ class DolphinHelper
             Config.Save();
         }
     }
-    public static bool isFlatpak = false;
+    private static bool isFlatpak = false;
+    public static bool IsFlatpak {
+        get => isFlatpak;
+        set {
+            isFlatpak = value;
+            Console.WriteLine($"Setting in Config: IsFlatpak - {value}");
+            Config.data!.IsFlatpak = value;
+            Config.Save();
+        }
+    }
     
     public static readonly string[] CommonDolphinPaths_Windows = [
         "Output",
@@ -101,8 +111,14 @@ class DolphinHelper
 
     public static void Init ()
     {
+        isFlatpak = Config.data!.IsFlatpak ?? false;
         InitDolphinToolPath();
         InitDolphinPath();
+        /*if (IsFlatpak)
+        {
+            using Process grantPerms = Process.Start("flatpak", ["document-export", "--app=org.DolphinEmu.dolphin-emu", OutputPath]);
+            grantPerms.WaitForExit();
+        }*/
         if (!Directory.Exists(OutputPath))
         {
             Directory.CreateDirectory(OutputPath);
@@ -176,11 +192,11 @@ class DolphinHelper
             Directory.Delete(outputPath, true);
         }
         List<string> command = [.. ExtractCommand, "-i", isoPath, "-o", outputPath];
-        if (isFlatpak)
+        if (IsFlatpak)
         {
-            using Process dolphinTool = Process.Start("flatpak", ["run", "--command=dolphin-tool", "org.DolphinEmu.dolphin-emu", .. command]);
+            using Process dolphinTool = Process.Start("flatpak", ["run", "--command=dolphin-tool", "--file-forwarding", "org.DolphinEmu.dolphin-emu", "@@", OutputPath, "@@", .. command]);
             dolphinTool.WaitForExit();
-            return dolphinTool.ExitCode == 0;
+            return dolphinTool.ExitCode != 0;
         }
         else
         {
@@ -260,6 +276,7 @@ class DolphinHelper
 
     public static bool TryGetDolphinPathsWhileRunning ()
     {
+        Console.WriteLine($"Trying to get while running...");
         List<Process> pname = [];
         foreach (string dolphinExeName in DolphinExeNames)
         {
@@ -278,12 +295,17 @@ class DolphinHelper
                 continue;
             (DolphinPath, DolphinToolPath) = GetDolphinPathsFromFolder(pathToDolphinDir);
             if ((DolphinPath, DolphinToolPath) is not (null, null))
+            {
+                Console.WriteLine($"Got path from running: {DolphinToolPath}");
                 return true;
+            }
         }
+        Console.WriteLine("Failed");
         return false;
     }
     public static bool TryGetDolphinPathsCommonPaths ()
     {
+        Console.WriteLine($"Trying to get from common paths...");
         string[] CommonDolphinPaths = [];
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
@@ -301,18 +323,27 @@ class DolphinHelper
                 CommonDolphinPaths = CommonDolphinPaths_Flatpak;
                 (DolphinPath, DolphinToolPath) = GetDolphinPathsFromFolder(CommonDolphinPaths);
                 if ((DolphinPath, DolphinToolPath) is (null, null))
+                {
+                    Console.WriteLine("Failed");
                     return false;
-                isFlatpak = true;
+                }
+                Console.WriteLine($"Is Flatpak!");
+                IsFlatpak = true;
+                using Process grantPerms = Process.Start("flatpak", ["document-export", "--app=org.DolphinEmu.dolphin-emu", OutputPath]);
+                grantPerms.WaitForExit();
             }
         }
+        Console.WriteLine($"Got path from common paths: {DolphinToolPath}");
         return true;
     }
     public static bool InitDolphinToolPath ()
     {
         if (DolphinToolPath is not null)
             return true;
+        Console.WriteLine("Trying to obtain DolphinTool...");
         if (Config.data!.DolphinToolPath is not null)
         {
+            Console.WriteLine($"Got path from config: {Config.data!.DolphinToolPath}");
             dolphinToolPath = Config.data.DolphinToolPath;
             return true;
         }
@@ -320,6 +351,7 @@ class DolphinHelper
             return true;
         if (TryGetDolphinPathsCommonPaths() && DolphinToolPath is not null) 
             return true;
+        Console.WriteLine("All methods failed!");
         return false;
     }
     public static bool InitDolphinPath ()
@@ -399,7 +431,7 @@ class DolphinHelper
             return;
         Process dolphin;
         List<string> args = ["-e", Path.Combine(OutputPath, "SMG2AP.json"), "-C", "Dolphin.Core.RAMOverrideEnable=False"];
-        if (isFlatpak)
+        if (IsFlatpak)
         {
             dolphin = Process.Start("flatpak", ["run", "--command=dolphin-emu", "org.DolphinEmu.dolphin-emu", .. args]);
         }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using ArchipelaGalaxy.Helpers;
 
 class Builder
 {
@@ -14,18 +15,6 @@ class Builder
     public static bool IsGeneratedMod ()
     {
         return Directory.Exists(ModOutputFolder);
-    }
-    private static void CopyFiles (string inputPath, string outputPath)
-    {
-        foreach (string dir in Directory.GetDirectories(inputPath))
-        {
-            Directory.CreateDirectory(dir.Replace(inputPath, outputPath));
-            CopyFiles(dir, Path.Combine(outputPath, Path.GetFileName(dir)));
-        }
-        foreach (string file in Directory.GetFiles(inputPath))
-        {
-            File.Copy(file, file.Replace(inputPath, outputPath), true);
-        }
     }
     public static bool GenerateModPreset (string? isoPath, string gameidWithRegion)
     {
@@ -176,7 +165,7 @@ class Builder
             else
             {
                 GenerateModPreset(DolphinHelper.smg2IsoPath, gameidWithRegion);
-                CopyFiles(ModOutputFolder, outputPath);
+                FileHelper.CopyFiles(ModOutputFolder, outputPath);
             }
         }
     }
